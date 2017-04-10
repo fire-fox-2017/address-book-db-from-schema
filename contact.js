@@ -7,23 +7,23 @@ class Contact {
   constructor (args) {
     this._id = null;
 
-    this.name = "unknown";
+    this._name = "unknown";
     if(args && args.hasOwnProperty('name'))
-      this.name = args['name'];
+      this._name = args['name'];
 
-    this.company = "";
+    this._company = "";
     if(args && args.hasOwnProperty('company'))
-      this.company = args['company'];
+      this._company = args['company'];
 
-    this.phone = "";
+    this._phone = "";
     if(args && args.hasOwnProperty('phone'))
-      this.phone = args['phone'];
+      this._phone = args['phone'];
 
-    this.email = "";
+    this._email = "";
     if(args && args.hasOwnProperty('email'))
-      this.email = args['email'];
+      this._email = args['email'];
 
-    this.is_saved = false;
+    this._is_saved = false;
   }
 
   get id() {
@@ -48,14 +48,26 @@ class Contact {
     return this._id;
   }
 
-  // get name() {
-  //   return this.name;
-  // }
+  get name() {
+    return this._name;
+  }
+
+  set name(name) {
+    this._name = name;
+  }
+
+  get phone() {
+    return this._phone;
+  }
+
+  get email() {
+    return this._email;
+  }
 
   save() {
-    if(this.is_saved) {
+    if(this._is_saved) {
       // update
-      let query = `UPDATE contacts SET name = '${this.name}', phone = '${this.phone}', email = '${this.email}' WHERE id = ${this._id}`
+      let query = `UPDATE contacts SET name = '${this._name}', phone = '${this._phone}', email = '${this._email}' WHERE id = ${this._id}`
 
       db.serialize(function () {
         db.run(query, function (err) {
@@ -71,16 +83,19 @@ class Contact {
 
     }
     else {
+      // this line is important
       let user = this;
+
+
       // if not exist, insert
-      let query = `INSERT INTO Contacts(name, company, phone, email) VALUES ( '${this.name}', '${this.company}', '${this.phone}', '${this.email}')`;
+      let query = `INSERT INTO Contacts(name, company, phone, email) VALUES ( '${this._name}', '${this._company}', '${this._phone}', '${this._email}')`;
       db.serialize(function () {
         db.run(query, function (err) {
           if (err) {
             console.log(err);
           }else {
             user._id = this.lastID; // does not work!!
-            user.is_saved = true;
+            user._is_saved = true;
             console.log("user._id", user._id);
 
             console.log('QUERY Ran Successfully!');
