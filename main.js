@@ -1,4 +1,10 @@
-const sqlite = require('sqlite3').verbose();
 
-var file = 'address_book.db';
-var db = new sqlite.Database(file);
+var ContactGroup = require('./contact-group');
+
+
+let cg = new ContactGroup();
+
+const repl = require('repl');
+const replServer = repl.start({prompt: '$ '});
+
+replServer.context.a = cg;

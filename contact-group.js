@@ -84,8 +84,19 @@ class ContactGroup {
   constructor () {}
 
   addContact(name, company, phone, email) {
-    let contact = new Contact({name: name, company: company, phone: phone, email: email});
-    contact.save();
+    // validates phone
+    if(/^[0-9]{3,10}$/.test(phone) == false) {
+      console.log(`Phone format is invalid.`)
+    }
+    // validates email
+    else if (  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email) == false ){
+      console.log(`Email format is invalid.`)
+    }
+    else {
+      let contact = new Contact({name: name, company: company, phone: phone, email: email});
+      contact.save();
+    }
+
   }
 
   showContact() {
@@ -93,7 +104,7 @@ class ContactGroup {
     let query = `select contacts.id as id, contacts.name as name, contacts.company as company, contacts.phone as phone, contacts.email as email, groups.name as group_name from contacts left join contact_groups on contacts.id = contact_groups.id_contact left join groups on groups.id = contact_groups.id_group;`;
 
     db.all(query, function(err, rows) {
-      console.log(rows);
+      // console.log(rows);
       rows.forEach(function(row) {
         console.log(`${row.id} ${row.name} ${row.company} ${row.phone} ${row.email} ${row.group_name}`);
       })
@@ -228,8 +239,12 @@ class ContactGroup {
     });  }
 
   printHelp() {
-    console.log(
-      `Welcome to Super COOL Address Book
+    console.log(`
+      Address Book Commands
+      ================================================
+      *phone is only 10 digits
+      *email format is name@blabla.com
+
       addContact(name, company_name, phone, email)
       addGroup(group_name)
 
@@ -251,13 +266,13 @@ class ContactGroup {
 }// end of ContactGroup class
 
 // let cg = new ContactGroup({id_contact: 40, id_group: 3});
- let cg = new ContactGroup();
-
-const repl = require('repl');
-const replServer = repl.start({prompt: '$ '});
-
-replServer.context.cg = cg;
-
+//  let cg = new ContactGroup();
+//
+// const repl = require('repl');
+// const replServer = repl.start({prompt: '$ '});
+//
+// replServer.context.cg = cg;
+//
 
 /*
 select contacts.id as id, contacts.name as name, contacts.company as company, contacts.phone as phone, contacts.email as email, groups.name as group_name from contacts left join contact_groups on contacts.id = contact_groups.id_contact left join groups on groups.id = contact_groups.id_group;
