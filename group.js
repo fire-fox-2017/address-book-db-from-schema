@@ -57,7 +57,7 @@ class Group {
             user.is_saved = true;
             console.log("user._id", user._id);
 
-            console.log('Group has been inserted into DB.');
+            console.log('Group has been added successfully.');
           }
         });
 
@@ -74,10 +74,12 @@ let group = new Group({name: 'Friends'});
 // contact.save();
 // console.log("After Insert ---> ID", contact.id);
 
-const repl = require('repl');
-const replServer = repl.start({prompt: '$ '});
-
-replServer.context.group = group;
+// const repl = require('repl');
+// const replServer = repl.start({prompt: '$ '});
+//
+// replServer.context.group = group;
 // replServer.context.save = contact.save;
 // replServer.context.id = contact.id;
 // replServer.context.name = contact.name;
+
+module.exports = Group;

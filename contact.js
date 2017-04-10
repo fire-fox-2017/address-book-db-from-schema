@@ -98,7 +98,7 @@ class Contact {
             user._is_saved = true;
             console.log("user._id", user._id);
 
-            console.log('QUERY Ran Successfully!');
+            console.log('Contact has been added successfully!');
           }
         });
 
@@ -116,10 +116,12 @@ let contact = new Contact({name: 'lona'});
 // contact.save();
 // console.log("After Insert ---> ID", contact.id);
 
-const repl = require('repl');
-const replServer = repl.start({prompt: '$ '});
-
-replServer.context.contact = contact;
+// const repl = require('repl');
+// const replServer = repl.start({prompt: '$ '});
+//
+// replServer.context.contact = contact;
 // replServer.context.save = contact.save;
 // replServer.context.id = contact.id;
 // replServer.context.name = contact.name;
+
+module.exports = Contact;
