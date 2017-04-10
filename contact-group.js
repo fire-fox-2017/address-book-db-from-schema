@@ -9,6 +9,7 @@ var file = 'address_book.db';
 var db = new sqlite.Database(file);
 
 class ContactGroup {
+  /*
   constructor (args) {
     this._id = null;
     this._id_contact = null;
@@ -22,7 +23,6 @@ class ContactGroup {
 
     this._is_saved = false;
   }
-
   get id() {
     return this._id;
   }
@@ -79,6 +79,9 @@ class ContactGroup {
 
     }
   }
+  */
+
+  constructor () {}
 
   addContact(name, company, phone, email) {
     let contact = new Contact({name: name, company: company, phone: phone, email: email});
@@ -86,10 +89,13 @@ class ContactGroup {
   }
 
   showContact() {
-    let query = `SELECT * FROM Contacts`;
+    // let query = `SELECT * FROM Contacts`;
+    let query = `select contacts.id as id, contacts.name as name, contacts.company as company, contacts.phone as phone, contacts.email as email, groups.name as group_name from contacts left join contact_groups on contacts.id = contact_groups.id_contact left join groups on groups.id = contact_groups.id_group;`;
+
     db.all(query, function(err, rows) {
+      console.log(rows);
       rows.forEach(function(row) {
-        console.log(`${row.id} ${row.name} ${row.company} ${row.phone} ${row.email}`);
+        console.log(`${row.id} ${row.name} ${row.company} ${row.phone} ${row.email} ${row.group_name}`);
       })
     });
   }
@@ -221,16 +227,44 @@ class ContactGroup {
 
     });  }
 
+  printHelp() {
+    console.log(
+      `Welcome to Super COOL Address Book
+      addContact(name, company_name, phone, email)
+      addGroup(group_name)
+
+      showContact()
+      showGroup()
+      showAddressBook()
+
+      updateContact(contact_id, new_name, new_company_name, new_phone, new_email)
+      updateGroup(group_id, new_group_name)
+
+      deleteContact(contact_id)
+      deleteGroup(group_id)
+
+      `
+    )
+  }
+
 
 }// end of ContactGroup class
 
-let cg = new ContactGroup({id_contact: 40, id_group: 3});
+// let cg = new ContactGroup({id_contact: 40, id_group: 3});
+ let cg = new ContactGroup();
 
 const repl = require('repl');
 const replServer = repl.start({prompt: '$ '});
 
 replServer.context.cg = cg;
 
+
+/*
+select contacts.id as id, contacts.name as name, contacts.company as company, contacts.phone as phone, contacts.email as email, groups.name as group_name from contacts left join contact_groups on contacts.id = contact_groups.id_contact left join groups on groups.id = contact_groups.id_group;
+
+
+
+*/
 
 
 
