@@ -5,8 +5,38 @@ var db = new sqlite.Database(file);
 
 
 class Group{
-  constructor(){
+  constructor(obj={}){
+    this.groupName = obj.groupName
+    this.id = null;
+  }
 
+  save(){
+    let obj = this;
+    if(this.id == null){
+      db.serialize(function(){
+        db.run(`INSERT INTO groups(group_name) VALUES('${obj.groupName}')`, function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            obj.id = this.lastID
+            console.log("Data berhasil Dimasukkan")
+          }
+        });
+      });
+    }
+    else{
+      db.serialize(function(){
+        db.run(`UPDATE groups SET group_name='${obj.groupName}' WHERE id=${obj.id}`, function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log('Data Berhasil Diupdate');
+          }
+        });
+      });
+    }
   }
 
   //
@@ -40,48 +70,49 @@ class Group{
         }
         else{
           console.log('Berhasil Delete Contact');
+          db.run(`UPDATE groupscontacts SET is_deleted='true' WHERE group_id=${id}`, function(err){
+            if(err){
+              console.log(err);
+            }
+            else{
+              console.log('Berhasil Update GroupsContacts');
+            }
+          });
         }
       });
 
-      db.run(`UPDATE groupscontacts SET is_deleted='true' WHERE group_id=${id}`, function(err){
+
+    })
+  }
+
+  static show(id){
+    db.serialize(function(){
+      db.each(`SELECT * FROM groups where id=${id}`, function(err, row){
         if(err){
           console.log(err);
         }
         else{
-          console.log('Berhasil Update GroupsContacts');
+          console.log(row);
+        }
+      });
+
+      db.each(`SELECT * FROM groupscontacts where group_id=${id} AND is_deleted='false'`, function(err, row){
+        if(err){
+          console.log(err);
+        }
+        else{
+          db.each(`SELECT name FROM contacts where id=${row.contact_id}`, function(err, row){
+            if(err){
+              console.log(err);
+            }
+            else{
+              console.log(row.name);
+            }
+          });
         }
       });
     })
   }
-  //
-  // static show(id){
-  //   db.serialize(function(){
-  //     db.each(`SELECT * FROM contacts where id=${id}`, function(err, row){
-  //       if(err){
-  //         console.log(err);
-  //       }
-  //       else{
-  //         console.log(row);
-  //       }
-  //     });
-  //
-  //     db.each(`SELECT * FROM groupscontacts where contact_id=${id} AND is_deleted='false'`, function(err, row){
-  //       if(err){
-  //         console.log(err);
-  //       }
-  //       else{
-  //         db.each(`SELECT group_name FROM groups where id=${row.group_id}`, function(err, row){
-  //           if(err){
-  //             console.log(err);
-  //           }
-  //           else{
-  //             console.log(row.group_name);
-  //           }
-  //         });
-  //       }
-  //     });
-  //   })
-  // }
 }
 
 export default Group

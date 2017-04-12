@@ -9,6 +9,7 @@ class Contact{
     this.name = obj.name
     this.company = obj.company
     this.phone = obj.phone
+    this.email = obj.email
     this.id = null;
   }
 
@@ -16,19 +17,20 @@ class Contact{
     let obj = this;
     if(this.id == null){
       db.serialize(function(){
-        db.run(`INSERT INTO contacts(name, company, phone) VALUES('${obj.name}', '${obj.company}', '${obj.phone}')`, function(err){
+        db.run(`INSERT INTO contacts(name, company, phone, email) VALUES('${obj.name}', '${obj.company}', '${obj.phone}', '${obj.email}')`, function(err){
           if(err){
             console.log(err);
           }
           else{
             obj.id = this.lastID
+            console.log("Data berhasil Dimasukkan")
           }
         });
       });
     }
     else{
       db.serialize(function(){
-        db.run(`UPDATE contacts SET name='${obj.name}', company='${obj.company}', phone='${obj.phone}' WHERE id=${obj.id}`, function(err){
+        db.run(`UPDATE contacts SET name='${obj.name}', company='${obj.company}', phone='${obj.phone}', email='${obj.email}' WHERE id=${obj.id}`, function(err){
           if(err){
             console.log(err);
           }
@@ -40,16 +42,41 @@ class Contact{
     }
   }
 
+  static validatePhone(phone){
+    if(phone.length >=10 && phone.length<=13)
+      return true
+    else
+      return false
+  }
 
-  static create(name, company, phone){
-    db.run(`INSERT INTO contacts(name, company, phone) VALUES('${name}', '${company}', '${phone}')`, function(err){
-      if(err){
-        console.log(err);
-      }
-      else{
-        console.log('Berhasil Insert');
-      }
-    });
+  static validateEmail(email){
+    let a = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    if(a.test(email))
+      return true
+    else
+      false
+  }
+
+  static create(name, company, phone, email){
+    let validatePhone = Contact.validatePhone(phone)
+    let validateEmail= Contact.validateEmail(email)
+    if(validatePhone == true && validateEmail == true){
+      db.run(`INSERT INTO contacts(name, company, phone, email) VALUES('${name}', '${company}', '${phone}', '${email}')`, function(err){
+        if(err){
+          console.log(err);
+        }
+        else{
+          console.log('Berhasil Insert');
+        }
+      });
+    }
+    else if(validatePhone == false){
+      console.log('Phone tidak valid')
+    }
+    else{
+      console.log('Email tidak valid')
+    }
+
   }
 
   static update(id, colom, value){
@@ -113,9 +140,6 @@ class Contact{
       });
     })
   }
-
-
-
 
 }
 

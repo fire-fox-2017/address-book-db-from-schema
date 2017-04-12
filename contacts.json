@@ -1,5 +1,5 @@
-[{"name":"oscar", "company":"hacktiv8", "phone": "089647583332"},
- {"name":"kaleb", "company":"ericsson", "phone": "087564529913"},
- {"name":"dody", "company":"nokia", "phone": "089271654123"},
- {"name":"naruto", "company":"samsung", "phone": "087874623513"}
+[{"name":"oscar", "company":"hacktiv8", "phone": "089647583332", "email":"kk@yahoo.com"},
+ {"name":"kaleb", "company":"ericsson", "phone": "087564529913", "email":"aa@live.com"},
+ {"name":"dody", "company":"nokia", "phone": "089271654123", "email":"agoda@gmail.com"},
+ {"name":"naruto", "company":"samsung", "phone": "087874623513", "email":"ayo@phone.com"}
 ]

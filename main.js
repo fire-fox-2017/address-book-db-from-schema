@@ -6,6 +6,7 @@ const fs = require('fs');
 
 import Contact from "./contact.js";
 import Group from "./group.js";
+import GroupContact from "./contact-group.js";
 
 let file = 'address_book.db';
 var db = new sqlite.Database(file);
@@ -28,7 +29,7 @@ let createDummyData = () =>{
       });
 
       for(let i=0; i<dummyContacts.length; i++)
-        db.run(`INSERT INTO contacts(name, company, phone) VALUES('${dummyContacts[i].name}', '${dummyContacts[i].company}', '${dummyContacts[i].phone}')`, function(err){
+        db.run(`INSERT INTO contacts(name, company, phone, email) VALUES('${dummyContacts[i].name}', '${dummyContacts[i].company}', '${dummyContacts[i].phone}', '${dummyContacts[i].email}')`, function(err){
           if(err){
             console.log(err);
           }
@@ -44,8 +45,4 @@ let start = repl.start("> ")
 start.context.createDummyData = createDummyData
 start.context.Contact = Contact
 start.context.Group = Group
-
-// a = new Contact()
-// a.id
-// a.save
-// a.id
+start.context.GroupContact = GroupContact

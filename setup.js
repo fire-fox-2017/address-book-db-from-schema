@@ -8,7 +8,7 @@ var db = new sqlite.Database(file);
 
 
 var CREATE_TABLE_CONTACTS = `CREATE TABLE IF NOT EXISTS contacts
-                            (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, company TEXT, phone TEXT)`
+                            (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, company TEXT, phone TEXT, email TEXT)`
 
 var CREATE_TABLE_GROUPS = `CREATE TABLE IF NOT EXISTS groups
                            (id INTEGER PRIMARY KEY AUTOINCREMENT, group_name TEXT)`
@@ -50,3 +50,4 @@ let createDB = () =>{
 let start = repl.start("> ")
 start.context.createDB = createDB
 
+  
