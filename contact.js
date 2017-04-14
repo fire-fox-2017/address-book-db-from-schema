@@ -8,23 +8,35 @@ let db = new sqlite.Database(file);
 class Contact {
   constructor(object) {
     this.firstname = object.firstname;
-    this.lastname = object.lastname || "";
-    this.email = object.email || "";
-    this.phone = object.phone || "";
-    this.company = object.company || "";
+    this.lastname = object.lastname || null;
+    this.email = object.email || null;
+    this.phone = object.phone || null;
+    this.company = object.company || null;
     this.id = object.id || null;
   }
 
-  validate(object) {
-    if (this.checkFirstName(obj.firstname) && this.checkLasttName(obj.lastname) && this.checkEmail(obj.email) && this.checkPhone(obj.phone)) {
+  static validate(obj) {
+    if (obj.firstname !== null) {
+      if (Contact.checkFirstName(obj.firstname) && Contact.checkLastName(obj.lastname) && Contact.checkEmail(obj.email) && Contact.checkPhone(obj.phone)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      console.log("Firstname must not be empty");
+    }
+  }
+
+  static validateUpdate(obj) {
+    if (Contact.checkFirstName(obj.firstname) && Contact.checkLastName(obj.lastname) && Contact.checkEmail(obj.email) && Contact.checkPhone(obj.phone)) {
       return true;
     } else {
       return false;
     }
   }
 
-  checkFirstName(name) {
-    if (/^[a-z]+$/ig.test(name)) {
+  static checkFirstName(name) {
+    if (/^[a-z]+$/ig.test(name) || name === null) {
       return true;
     } else {
       console.log(`First name must contain letters only`);
@@ -32,8 +44,8 @@ class Contact {
     }
   }
 
-  checkLasttName(name) {
-    if (/^[a-z]+$/ig.test(name)) {
+  static checkLastName(name) {
+    if (/^[a-z]+$/ig.test(name) || name === null) {
       return true;
     } else {
       console.log(`Last name must contain letters only`);
@@ -41,8 +53,8 @@ class Contact {
     }
   }
 
-  checkEmail(email) {
-    if (/^\w+@[a-z]+.[a-z]{2,3}$/ig.test(email)) {
+  static checkEmail(email) {
+    if (/^[-_.a-z0-9]+@[a-z]+.[a-z]{2,3}$/ig.test(email) || email === null) {
       return true;
     } else {
       console.log(`Invalid email`);
@@ -50,17 +62,17 @@ class Contact {
     }
   }
 
-  checkPhone(phone) {
-    if (/\d-\d{3}-\d{3}-\d{4}/g.test(phone)) {
+  static checkPhone(phone) {
+    if (/\d-\d{3}-\d{3}-\d{4}/g.test(phone) || phone === null) {
       return true;
     } else {
-      console.log(`Phone must be in US format of x-xxx-xxx-xxxx`);
+      console.log(`Invalid phone number, phone must contain only digits and in US format of x-xxx-xxx-xxxx`);
       return false;
     }
   }
 
   static show() {
-    let query = "select c.*, group_name from contacts c left join (select gc.*, g.group_name from group_contacts gc, groups g where gc.group_id = g.id) a on c.id = a.id order by c.id";
+    let query = "select a.id, firstname, lastname, email, phone, company, group_name from (select c.id, c.firstname, c.lastname, c.email, c.phone, c.company, gc.group_id from contacts c left join group_contacts gc on c.id = gc.contact_id) a left join groups g on a.group_id = g.id";
     db.serialize(() => {
       db.each(query, (err, row) => {
         if (err) {
@@ -87,7 +99,7 @@ class Contact {
 
   save() {
     let obj = this;
-    if (obj.id !== null) {
+    if (obj.id !== null && Contact.validate(obj)) {
       db.serialize(() => {
         db.get("SELECT * from contacts order by id desc", (err, row) => {
           if (err) {
@@ -107,7 +119,7 @@ class Contact {
           }
         });
       });
-    } else {
+    } else if (obj.id === null && Contact.validate(obj)){
       let query = `INSERT INTO contacts (firstname, lastname, email, phone, company) values ('${obj.firstname}','${obj.lastname}','${obj.email}','${obj.phone}','${obj.company}')`;
       db.serialize(() => {
         db.run(query, (err) => {
@@ -128,6 +140,54 @@ class Contact {
         });
       });
     }
+  }
+
+  static update(id, obj) {
+    let update = {};
+    update.firstname = obj.firstname || null;
+    update.lastname = obj.lastname || null;
+    update.email = obj.email || null;
+    update.phone = obj.phone || null;
+    update.company = obj.company || null;
+    if (this.validateUpdate(update)) {
+      db.serialize(() => {
+        db.get(`SELECT * FROM contacts Where id = ${id}`, (err, row) => {
+          if (err) {
+            console.log(err);
+          } else {
+            let foundObj = row;
+            foundObj.firstname = obj.firstname || foundObj.firstname;
+            foundObj.lastname = obj.lastname || foundObj.firstname;
+            foundObj.email = obj.email || foundObj.email;
+            foundObj.phone = obj.phone || foundObj.phone;
+            foundObj.company = obj.company || foundObj.company;
+            let query = `UPDATE contacts SET firstname = '${foundObj.firstname}', lastname = '${foundObj.lastname}', email = '${foundObj.email}', phone = '${foundObj.phone}', company = '${foundObj.company}' WHERE id = ${id}`;
+            db.serialize(() => {
+              db.run(query, (err) => {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log(`Record with id ${id} has been updated`);
+                }
+              });
+            });
+          }
+        });
+      });
+    }
+  }
+
+  static findById(id) {
+    let query = `SELECT * FROM contacts Where id = ${id}`;
+    db.serialize(() => {
+      db.get(query, (err, row) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(JSON.stringify(row));
+        }
+      });
+    });
   }
 
 }

@@ -6,7 +6,10 @@ let file = 'address_book.db';
 let db = new sqlite.Database(file);
 
 class Group {
-  
+  constructor(object) {
+    this.group_name = object.group_name;
+    this.id = object.id || null;
+  }
 }
 
 
