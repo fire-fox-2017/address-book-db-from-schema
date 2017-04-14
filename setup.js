@@ -81,7 +81,7 @@ let seedGroups = () => {
           console.log(err);
         } else {
           if (i === groupsData.length - 1) {
-            console.log(`Groups has been succesfully added.`);
+            console.log(`Groups has been succesfully seeded.`);
           }
         }
       });
@@ -98,7 +98,7 @@ let seedGroupContacts = () => {
           console.log(err);
         } else {
           if (i === groupsData.length - 1) {
-            console.log(`Group-contacts has been succesfully added.`);
+            console.log(`Group-contacts has been succesfully seeded.`);
           }
         }
       });
