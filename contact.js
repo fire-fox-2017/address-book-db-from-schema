@@ -91,7 +91,7 @@ class Contact {
         if (err) {
           console.log(err);
         } else {
-          console.log(`The record with id ${id} has been deleted`);
+          console.log(`The record with id ${id} has been deleted from 'contacts'`);
         }
       });
     });
@@ -112,7 +112,7 @@ class Contact {
                 if (err) {
                   console.log(err);
                 } else {
-                  console.log(`Record with id ${id} has been updated`);
+                  console.log(`Record with id ${id} from 'contacts' has been updated`);
                 }
               });
             });
@@ -135,7 +135,7 @@ class Contact {
                 }
               });
             });
-            console.log(`A new record has been inserted into the contacts`);
+            console.log(`A new record has been inserted into the 'contacts'`);
           }
         });
       });
@@ -149,7 +149,7 @@ class Contact {
     update.email = obj.email || null;
     update.phone = obj.phone || null;
     update.company = obj.company || null;
-    if (this.validateUpdate(update)) {
+    if (Contact.validateUpdate(update)) {
       db.serialize(() => {
         db.get(`SELECT * FROM contacts Where id = ${id}`, (err, row) => {
           if (err) {
@@ -167,7 +167,7 @@ class Contact {
                 if (err) {
                   console.log(err);
                 } else {
-                  console.log(`Record with id ${id} has been updated`);
+                  console.log(`Record with id ${id} from 'contacts' has been updated`);
                 }
               });
             });
@@ -180,11 +180,13 @@ class Contact {
   static findById(id) {
     let query = `SELECT * FROM contacts Where id = ${id}`;
     db.serialize(() => {
-      db.get(query, (err, row) => {
+      db.all(query, (err, rows) => {
         if (err) {
           console.log(err);
         } else {
-          console.log(JSON.stringify(row));
+          rows.forEach((row) => {
+            console.log(JSON.stringify(row));
+          });
         }
       });
     });
