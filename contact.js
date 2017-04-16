@@ -85,13 +85,29 @@ class Contact {
   }
 
   static delete(id) {
-    let query = `DELETE FROM contacts WHERE id = ${id}`;
     db.serialize(() => {
-      db.run(query, (err) => {
-        if (err) {
-          console.log(err);
+      db.get(`SELECT * FROM contacts WHERE id = ${id}`, (err, contact) => {
+        if (contact) {
+          db.serialize(() => {
+            db.run(`DELETE FROM contacts WHERE id = ${id}`, (err) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(`The record with id ${id} has been deleted from 'contacts'`);
+              }
+            });
+          });
+          db.serialize(() => {
+            db.run(`DELETE FROM group_contacts WHERE contact_id = ${id}`, (err) => {
+              if(err) {
+                console.log(err);
+              } else {
+                console.log(`The record with contact_id ${id} has been deleted from 'group_contacts'`);
+              }
+            });
+          });
         } else {
-          console.log(`The record with id ${id} has been deleted from 'contacts'`);
+          console.log(`Contact Id is not found.`)
         }
       });
     });
@@ -191,6 +207,68 @@ class Contact {
       });
     });
   }
+
+  assignToGroup(groupId) {
+    let contact = this;
+    if (contact.id !== null) {
+      db.serialize(() => {
+        db.get(`SELECT * FROM groups WHERE id = ${groupId}`, (err, group) => {
+          if(err) {
+            console.log(err);
+          } else {
+            if (group) {
+              db.serialize(() => {
+                db.run(`INSERT INTO group_contacts (contact_id, group_id) VALUES (${contact.id}, ${groupId})`, (err) => {
+                  if(err) {
+                    console.log(err);
+                  } else {
+                    console.log(`Contact with id ${contact.id} has been assign to group with id ${groupId}`);
+                  }
+                });
+              });
+            } else {
+              console.log(`Group Id is not found`)
+            }
+          }
+        });
+      });
+    } else {
+      console.log(`Contact must be saved first.`)
+    }
+  }
+
+  static assignToGroup(contactId, groupId) {
+    db.serialize(() => {
+      db.get(`SELECT * FROM groups WHERE id = ${groupId}`, (err, group) => {
+        if(err) {
+          console.log(err);
+        } else {
+          if (group) {
+            db.serialize(() => {
+              db.get(`SELECT * FROM contacts WHERE id = ${contactId}`, (err, contact) => {
+                if (contact) {
+                  db.serialize(() => {
+                    db.run(`INSERT INTO group_contacts (contact_id, group_id) VALUES (${contactId}, ${groupId})`, (err) => {
+                      if(err) {
+                        console.log(err);
+                      } else {
+                        console.log(`Contact with id ${contact.id} has been assign to group with id ${groupId}`);
+                      }
+                    });
+                  });
+                } else {
+                  console.log(`Contact Id is not found.`);
+                }
+              })
+            });
+          } else {
+            console.log(`Group Id is not found`)
+          }
+        }
+      });
+    });
+  }
+
 
 }
 

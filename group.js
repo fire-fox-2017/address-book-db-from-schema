@@ -46,13 +46,29 @@ class Group {
   }
 
   static delete(id) {
-    let query = `DELETE FROM groups WHERE id = ${id}`;
     db.serialize(() => {
-      db.run(query, (err) => {
-        if (err) {
-          console.log(err);
+      db.get(`SELECT * FROM groups WHERE id = ${id}`, (err, group) => {
+        if (group) {
+          db.serialize(() => {
+            db.run(`DELETE FROM groups WHERE id = ${id}`, (err) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(`The record with id ${id} has been deleted from 'groups'`);
+              }
+            });
+          });
+          db.serialize(() => {
+            db.run(`DELETE FROM group_contacts WHERE group_id = ${id}`, (err) => {
+              if(err) {
+                console.log(err);
+              } else {
+                console.log(`The record with group_id ${id} has been deleted from 'group_contacts'`);
+              }
+            });
+          });
         } else {
-          console.log(`The record with id ${id} has been deleted from 'groups'`);
+          console.log(`Group with id ${id} is not found`);
         }
       });
     });
