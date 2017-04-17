@@ -16,5 +16,13 @@
   "devDependencies": {
     "babel-cli": "6.14.0",
     "babel-preset-es2015": "6.14.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fire-fox-2017/address-book-db-from-schema.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fire-fox-2017/address-book-db-from-schema/issues"
+  },
+  "homepage": "https://github.com/fire-fox-2017/address-book-db-from-schema#readme"
 }
