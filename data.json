@@ -1,0 +1,24 @@
+{
+  "contacts": [{ "first_name": "dyan",
+                 "last_name": "kastutara",
+                 "phone": "085841410308",
+                 "email": "dyankastutara19@gmail.com",
+                 "created_at": "10-04-2017"
+               },
+               { "first_name": "Kastutara",
+                 "last_name": "Dyan",
+                 "phone": "085768127763",
+                 "email": "dyankastutara@hacktiv8.com",
+                 "created_at": "10-04-2017"}],
+  "groups": [{"group_name": "Black",
+              "created_at": "10-04-2017"
+             },
+             {"group_name": "FireFox",
+             "created_at": "10-04-2017"}],
+
+  "group_contacts": [{ "contact_id": "1",
+                       "group_id": "1"
+                     },
+                     { "contact_id": "2",
+                       "group_id": "2"}]
+}
