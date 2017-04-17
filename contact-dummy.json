@@ -1,0 +1,8 @@
+[{"nama":"Default", "perusahaan":"Default", "nomor_telpon": "000000000000", "email":"Default@gmail.com"},
+ {"nama":"Tono Sutarno", "perusahaan":"AQUA", "nomor_telpon": "082728832882", "email":"Tono@gmail.com"},
+ {"nama":"Indra Bekti", "perusahaan":"DANONE", "nomor_telpon": "08291872661", "email":"Indra@gmail.com"},
+ {"nama":"Sule Suratman", "perusahaan":"INDOMIE", "nomor_telpon": "08192773722", "email":"Sule@gmail.com"},
+ {"nama":"Monalia Sukma", "perusahaan":"INDOFOOD", "nomor_telpon": "081728838828", "email":"Monalia@gmail.com"},
+  {"nama":"Sari Laras", "perusahaan":"ACE", "nomor_telpon": "027188883", "email":"Sari@gmail.com"},
+  {"nama":"Rasa Suas", "perusahaan":"ALFAMART", "nomor_telpon": "08276466362", "email":"Rasa@gmail.com"}
+]
